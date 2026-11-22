@@ -37,7 +37,7 @@ export function settle(el: HTMLElement, ms: number): Promise<void> {
  * motion. Never throws: a failed animation resolves, it does not reject —
  * a broken animation must not strand the router's dual tree.
  */
-export function played(
+export async function played(
 	el: HTMLElement,
 	keyframes: Keyframe[],
 	options: number | KeyframeAnimationOptions,
@@ -46,5 +46,10 @@ export function played(
 		return Promise.resolve()
 	}
 	const animation = el.animate(keyframes, options)
-	return animation.finished.catch(() => undefined)
+	try {
+		await animation.finished
+	} catch {
+		// A cancelled/failed animation resolves — it must not strand the
+		// router's dual tree.
+	}
 }
