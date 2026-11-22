@@ -1,6 +1,6 @@
 {
 	"name": "@xzsv/animate",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Transition presets and settle plumbing for @xzsv/router route animations (animation helpers, anime.js-friendly)",
 	"type": "module",
 	"license": "MIT",
