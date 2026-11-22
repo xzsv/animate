@@ -1,6 +1,6 @@
 {
 	"name": "@xzsv/animate",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Transition presets and settle plumbing for @xzsv/router route animations (animation helpers, anime.js-friendly)",
 	"type": "module",
 	"license": "MIT",
@@ -16,7 +16,7 @@
 		"check": "tsc --noEmit && svelte-check-native --tsconfig ./tsconfig.json"
 	},
 	"peerDependencies": {
-		"@xzsv/router": "workspace:^",
+		"@xzsv/router": ">=0.2.0",
 		"animejs": "^4.5.0"
 	},
 	"peerDependenciesMeta": {
