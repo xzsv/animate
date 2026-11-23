@@ -33,7 +33,6 @@ function leaveOf(
 			left: '',
 			width: '',
 		})
-		await settle(el, 0)
 	}
 }
 
@@ -43,7 +42,6 @@ export function crossfade(options: PresetOptions = {}): Preset {
 	return {
 		enter: async (el) => {
 			await played(el, [{ opacity: 0 }, { opacity: 1 }], { duration, easing: 'ease-out' })
-			await settle(el, duration)
 		},
 		leave: leaveOf(duration, 'ease-out', () => [{ opacity: 1 }, { opacity: 0 }]),
 	}
@@ -110,7 +108,6 @@ export function lift(options: PresetOptions = {}): Preset {
 				[{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'translateY(0)' }],
 				{ duration, easing: 'ease-out' },
 			)
-			await settle(el, duration)
 		},
 		leave: leaveOf(duration, 'ease-out', () => [{ opacity: 1 }, { opacity: 0 }]),
 	}
@@ -126,7 +123,6 @@ export function scale(options: PresetOptions = {}): Preset {
 				[{ opacity: 0, transform: 'scale(0.98)' }, { opacity: 1, transform: 'scale(1)' }],
 				{ duration, easing: 'ease-out' },
 			)
-			await settle(el, duration)
 		},
 		leave: leaveOf(duration, 'ease-out', () => [{ opacity: 1 }, { opacity: 0 }]),
 	}

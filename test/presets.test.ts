@@ -95,3 +95,31 @@ test('slide direction follows the order rank', async () => {
 		{ opacity: 0, transform: 'translateX(24px)' },
 	])
 })
+
+test("enter resolves when WAAPI finishes, without the settle fallback timer", async () => {
+	const node = el()
+	const nodeWithAnimate = node as HTMLElement & {
+		animate: (keyframes: unknown, options?: unknown) => { finished: Promise<unknown> }
+	}
+	nodeWithAnimate.animate = () => ({ finished: Promise.resolve() })
+	const { enter } = crossfade({ duration: 400 })
+	const startedAt = Date.now()
+	await enter(node, info("/", "/about"))
+	const elapsed = Date.now() - startedAt
+	expect(elapsed).toBeLessThan(350)
+})
+
+test("leaveOf no longer trails a dead zero settle", async () => {
+	const node = el()
+	const nodeWithAnimate = node as HTMLElement & {
+		animate: (keyframes: unknown, options?: unknown) => { finished: Promise<unknown> }
+	}
+	let calls = 0
+	nodeWithAnimate.animate = () => {
+		calls++
+		return { finished: Promise.resolve() }
+	}
+	const { leave } = crossfade({ duration: 120 })
+	await leave(node, info("/hub", "/"))
+	expect(calls).toBe(1)
+})

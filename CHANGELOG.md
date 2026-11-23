@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- WAAPI presets (`crossfade`, `lift`, `scale`) no longer double-wait:
+  `played()` already resolves on the animation's `finished` promise, so
+  the trailing `settle(el, duration)` — which always burned the full
+  `duration + 80 ms` fallback timer — is gone. Route hand-offs release
+  ~`duration + 80 ms` sooner (ISSUES #11 in @xzsv/router).
+
 ## 0.2.0
 
 ### Added
