@@ -8,3 +8,7 @@
 export { crossfade, lift, scale, slide } from './presets.ts'
 export type { PresetOptions } from './presets.ts'
 export { played, reduced, settle } from './settle.ts'
+export * as flip from './flip.ts'
+export type { FlipOptions } from './flip.ts'
+export { stagger } from './stagger.ts'
+export type { StaggerOptions } from './stagger.ts'

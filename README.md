@@ -48,11 +48,53 @@ const transitions = slide({
 })
 ```
 
+- `stagger(target, options)` — reveal a list one item after another. Each
+  item rises `distance` px while fading in; the nth waits
+  `delay + n × step` (steps stop growing at `maxSteps`). `fill: 'backwards'`
+  holds every item at its first keyframe until its turn, so nothing
+  flashes and no inline style is written. Without WAAPI, or under reduced
+  motion, items simply stay visible.
+- `flip.capture()` / `flip.peek(root)` / `flip.play(root, options)` /
+  `flip.clear()` — shared-element (FLIP) transitions: a list card becoming
+  the page header, a title moving into the bar. Tag both sides with
+  `data-flip="<key>"`; equal keys form a pair, unpaired tags are ignored.
+  `capture()` records rects while the old DOM is untouched, `play()` moves
+  the new element from the old rect to its real place and hides the
+  outgoing copy. `peek()` is synchronous and non-consuming, so an `enter`
+  callback can choose between a FLIP and a plain preset. No-ops under
+  reduced motion or without WAAPI. Paired elements must not carry a
+  transform of their own while a pair plays.
+
+```ts
+import { crossfade, flip, slide, stagger } from '@xzsv/animate'
+
+const fade = crossfade()
+const page = slide({ axis: 'x' })
+const TASKS = '[data-stagger] > *'
+
+const router = createRouter({
+	routes: {
+		// Capture before anything lifts the old page out of flow.
+		hooks: { beforeLoad: ({ from, to }) => flip.capture() },
+		// ...
+	},
+	transitions: {
+		enter: async (el, info) => {
+			if (flip.peek(el) > 0) await flip.play(el, { duration: 360 })
+			else await page.enter(el, info)
+			await stagger(TASKS, { root: el, step: 40 })
+		},
+		leave: fade.leave,
+	},
+})
+```
+
 ## Out of scope
 
-No engine features. For timelines, staggers, or SVG work, import
+No engine features. For timelines, SVG or path work, or easing curves
+beyond what CSS accepts, import
 [`animejs`](https://animejs.com) (v4, MIT) _inside_ your own enter/leave
-callbacks and return the finished promise — this package stays a ~1kB,
+callbacks and return the finished promise — this package stays a small,
 tree-shakeable, source-shipped set of functions.
 
 ## Status

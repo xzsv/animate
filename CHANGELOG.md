@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Added
+
+- `flip` namespace: `capture()`, `peek()`, `play()`, `clear()` for
+  shared-element (FLIP) transitions between route nodes. Elements tagged
+  `data-flip="<key>"` on both sides of a swap form a pair; `capture()`
+  belongs in a `beforeLoad` hook (old DOM untouched), `play()` in `enter`.
+  `peek()` tells an `enter` callback whether a flight is pending. No-ops
+  under reduced motion or without WAAPI.
+- `stagger(target, options)`: sequential reveal for lists with
+  `fill: 'backwards'`, so nothing flashes and no inline style is written.
+
 ### Fixed
 
 - WAAPI presets (`crossfade`, `lift`, `scale`) no longer double-wait:

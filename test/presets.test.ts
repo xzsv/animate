@@ -42,14 +42,20 @@ test('slide enter drifts the element via CSS transition and resets it', async ()
 /** Shadow the style transform accessor to record every value written. */
 const recordTransforms = (node: HTMLElement): string[] => {
 	const seen: string[] = []
-	const desc = Object.getOwnPropertyDescriptor(CSSStyleDeclaration.prototype, 'transform')
-	Object.defineProperty(node.style, 'transform', {
-		get: () => (desc?.get ? desc.get.call(node.style) : ''),
-		set: (v: string) => {
-			seen.push(v)
-			desc?.set?.call(node.style, v)
+	// happy-dom 20 hands out a Proxy for `style` that refuses
+	// defineProperty, so wrap the object instead of patching the property.
+	const real = node.style
+	const shadow = new Proxy(real, {
+		get: (target, prop) => {
+			const value = Reflect.get(target, prop, target)
+			return typeof value === 'function' ? value.bind(target) : value
+		},
+		set: (target, prop, value) => {
+			if (prop === 'transform') seen.push(String(value))
+			return Reflect.set(target, prop, value, target)
 		},
 	})
+	Object.defineProperty(node, 'style', { value: shadow, configurable: true })
 	return seen
 }
 
