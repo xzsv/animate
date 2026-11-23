@@ -34,7 +34,19 @@ export const router = createRouter({
 - Presets: `crossfade()`, `slide()`, `lift()`, `scale()` — each returns
   `{ enter, leave }` pairs matching the router's `TransitionFn`. Leaves
   lift out of flow (absolute + `width: 100%`) so both trees genuinely
-  cross-fade instead of stacking.
+  cross-fade instead of stacking. `slide()` takes `axis` (`'x'`/`'y'`),
+  `easing`, and an `order(path)` rank: `order(to) >= order(from)` slides
+  forward, a lower rank reverses both pages — screen order is the single
+  source of direction.
+
+```ts
+const transitions = slide({
+	axis: 'x',
+	distance: 32,
+	duration: 260,
+	order: (p) => ({ '/': 0, '/hub': 1, '/battle': 2 })[p] ?? 1,
+})
+```
 
 ## Out of scope
 
